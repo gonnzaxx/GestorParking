@@ -11,16 +11,21 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
 
+    @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime startDate;
+
+    @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime endDate;
+
+    @Column(nullable = false, length = 50)
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "spot_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "spot_id", nullable = false)
     private ParkingSpot parkingSpot;
 
     public Reservation() {}

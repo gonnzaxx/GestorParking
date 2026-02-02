@@ -1,6 +1,7 @@
 package org.example.gestorparking.Models;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,11 +11,15 @@ public class Parking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parkingId;
+
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "parking", cascade = CascadeType.ALL)
-    private List<ParkingSpot> spots;
+    @OneToMany(mappedBy = "parking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ParkingSpot> spots = new ArrayList<>();
 
     public Parking() {}
 

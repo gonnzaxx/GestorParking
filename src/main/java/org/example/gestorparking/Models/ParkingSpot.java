@@ -1,6 +1,7 @@
 package org.example.gestorparking.Models;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,15 +11,19 @@ public class ParkingSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long spotId;
+
+    @Column(nullable = false, unique = true)
     private String number;
+
+    @Column(nullable = false)
     private String type;
 
-    @ManyToOne
-    @JoinColumn(name = "parking_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "parking_id", nullable = false)
     private Parking parking;
 
-    @OneToMany(mappedBy = "parkingSpot", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "parkingSpot", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
     public ParkingSpot() {}
 
