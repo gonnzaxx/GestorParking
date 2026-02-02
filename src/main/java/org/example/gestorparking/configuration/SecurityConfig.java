@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas (accesibles sin login)
                         .requestMatchers("/", "/registro",
-                                "/login").permitAll()
+                                "/login", "/fragments/**").permitAll()
                         .requestMatchers("/css/**", "/js/**",
                                 "/images/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() //Solo para desarrollo
@@ -44,7 +45,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login") // Página de login personalizada
                         .loginProcessingUrl("/login") // URL que procesa el login
-                        .defaultSuccessUrl("/profile", true) // Redirige a /profile tras login exitoso
+                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler()) // Redirige a la página pedida por usuario tras login exitoso
                         .failureUrl("/login?error=true") // Redirige aquí si falla
                         .permitAll()
                 )

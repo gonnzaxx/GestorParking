@@ -7,19 +7,8 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <!-- NAVEGACIÓN -->
-    <nav class="navbar">
-        <div class="container flex-between">
-            <span class="navbar-brand">Apárcame!</span>
-            <ul class="nav-list">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#parking" class="nav-link">Parkings</a></li>
-                <li><a href="#about" class="nav-link">Sobre Nosotros</a></li>
-                <li><a th:href="@{/userProfile}" class="nav-link">Mi Perfil</a></li>
-                <li><a th:href="@{/admin}" class="nav-link">Admin</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- HEADER -->
+    <div th:replace="fragments/header :: header"></div>
 
     <!-- SECCIÓN HOME -->
     <section id="home" class="hero">
@@ -27,8 +16,13 @@
             <h1>¿No encuentras dónde aparcar?</h1>
             <p>Reserva tu plaza de aparcamiento de forma rápida, fácil y segura</p>
             <div class="hero-actions">
-                <button class="btn btn-primary btn-lg">Reservar Ahora</button>
-                <button class="btn btn-outline btn-lg">Ver Parkings</button>
+                <button class="btn btn-primary btn-lg" onclick="document.getElementById('parking').scrollIntoView({behavior: 'smooth'});">
+                    Reservar Ahora
+                </button>
+
+                <button class="btn btn-primary btn-lg" onclick="window.location.href='/userProfile';">
+                    Iniciar Sesión
+                </button>
             </div>
         </div>
     </section>
@@ -47,20 +41,16 @@
                     <p>Reserva tu plaza en menos de 30 segundos desde cualquier dispositivo</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Seguro y Confiable</h3>
-                    <p>Tus datos están protegidos con los más altos estándares de seguridad</p>
+                    <div class="feature-icon">📍</div>
+                    <h3>GPS Integrado</h3>
+                    <p>Ubica los parkings cercanos a tu ubicación actual</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💳</div>
                     <h3>Múltiples Pagos</h3>
                     <p>Acepta todas las formas de pago: tarjeta, efectivo y billetera digital</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📍</div>
-                    <h3>GPS Integrado</h3>
-                    <p>Ubica los parkings cercanos a tu ubicación actual</p>
-                </div>
+
             </div>
         </div>
     </section>
@@ -82,51 +72,33 @@
             </div>
 
             <div class="parking-info">
-                <div class="card">
+                <div th:each="parking : ${parkings}" class="card">
                     <div class="card-header">
-                        <h3>Parking Centro</h3>
+                        <h3 th:text="${parking.name}"></h3>
                     </div>
                     <div class="card-body">
-                        <p><strong>Ubicación:</strong> Calle Principal, 123</p>
-                        <p><strong>Plazas disponibles:</strong> <span class="badge badge-success">15</span></p>
-                        <p><strong>Precio/hora:</strong> $2.50</p>
-                        <p><strong>Horario:</strong> 24/7</p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-secondary">Ver Detalles</button>
-                        <button class="btn btn-primary">Reservar</button>
-                    </div>
-                </div>
+                        <p><strong>Ubicación: </strong>
+                            <span th:text="${parking.address}"></span>
+                        </p>
+                        <p><strong>Plazas disponibles: </strong>
+                            <span th:text="${#lists.size(parking.spots)}" class="badge badge-success"></span>
+                        </p>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Parking Estación</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Ubicación:</strong> Estación Central, 456</p>
-                        <p><strong>Plazas disponibles:</strong> <span class="badge badge-warning">3</span></p>
-                        <p><strong>Precio/hora:</strong> $3.00</p>
-                        <p><strong>Horario:</strong> 6:00 - 23:00</p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-secondary">Ver Detalles</button>
-                        <button class="btn btn-primary">Reservar</button>
-                    </div>
-                </div>
+                        <p><strong>Precio/hora: </strong>
+                            <span th:text="'$' + ${parking.pricePerHour}"></span>
+                        </p>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Parking Mall</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Ubicación:</strong> Centro Comercial Plaza</p>
-                        <p><strong>Plazas disponibles:</strong> <span class="badge badge-error">0</span></p>
-                        <p><strong>Precio/hora:</strong> $2.00</p>
-                        <p><strong>Horario:</strong> 10:00 - 22:00</p>
+                        <p><strong>Horario: </strong>
+                            <span th:text="${parking.schedule}"></span>
+                        </p>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-secondary">Ver Detalles</button>
-                        <button class="btn btn-primary" disabled>Lleno</button>
+                        <a th:href="@{/detailsParking/{id}(id=${parking.parkingId})}" class="btn btn-secondary">
+                            Ver detalles
+                        </a>
+                        <a th:href="@{/reservation(parkingId=${parking.parkingId})}" class="btn btn-primary">
+                            Reservar
+                        </a>
                     </div>
                 </div>
             </div>
@@ -151,109 +123,12 @@
                 </div>
             </div>
 
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="team-member-image">
-                        <img src="https://via.placeholder.com/120" alt="Team member">
-                    </div>
-                    <h4>Juan García</h4>
-                    <p>CEO & Co-founder</p>
-                </div>
-                <div class="team-member">
-                    <div class="team-member-image">
-                        <img src="https://via.placeholder.com/120" alt="Team member">
-                    </div>
-                    <h4>María López</h4>
-                    <p>CTO & Co-founder</p>
-                </div>
-                <div class="team-member">
-                    <div class="team-member-image">
-                        <img src="https://via.placeholder.com/120" alt="Team member">
-                    </div>
-                    <h4>Carlos Martín</h4>
-                    <p>Lead Developer</p>
-                </div>
-            </div>
         </div>
     </section>
 
-
-
-    <!-- ALERTAS DE EJEMPLO -->
-    <section class="section">
-        <div class="container">
-            <h2>Estados y Notificaciones</h2>
-
-            <div class="alert alert-success">
-                <span>✓</span>
-                <div>
-                    <strong>¡Éxito!</strong> Tu reserva se ha completado correctamente.
-                </div>
-                <span class="alert-close">&times;</span>
-            </div>
-
-            <div class="alert alert-info">
-                <span>ℹ</span>
-                <div>
-                    <strong>Información:</strong> Tus plazas vence en 2 horas.
-                </div>
-                <span class="alert-close">&times;</span>
-            </div>
-
-            <div class="alert alert-warning">
-                <span>⚠</span>
-                <div>
-                    <strong>Advertencia:</strong> Faltan 15 minutos para finalizar tu reserva.
-                </div>
-                <span class="alert-close">&times;</span>
-            </div>
-
-            <div class="alert alert-error">
-                <span>✕</span>
-                <div>
-                    <strong>Error:</strong> No se pudo procesar tu pago. Intenta de nuevo.
-                </div>
-                <span class="alert-close">&times;</span>
-            </div>
-        </div>
-    </section>
 
     <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div>
-                    <h3>Apárcame!</h3>
-                    <p>Tu solución inteligente para estacionar.</p>
-                </div>
-                <div>
-                    <h3>Enlaces Rápidos</h3>
-                    <ul style="list-style: none;">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Parkings</a></li>
-                        <li><a href="#">Sobre Nosotros</a></li>
-                        <li><a href="#">Contacto</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Legal</h3>
-                    <ul style="list-style: none;">
-                        <li><a href="#">Términos de Uso</a></li>
-                        <li><a href="#">Política de Privacidad</a></li>
-                        <li><a href="#">Cookies</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Contacto</h3>
-                    <p>Email: info@aparcame.com</p>
-                    <p>Teléfono: +34 900 123 456</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Apárcame!. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <div th:replace="fragments/footer :: footer"></div>
 
     <!-- SCRIPTS -->
     <script>

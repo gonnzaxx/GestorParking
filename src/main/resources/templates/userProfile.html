@@ -176,60 +176,60 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>👤 Mi Perfil</h1>
-    </div>
+    <div class="container">
+        <div class="header">
+            <h1>👤 Mi Perfil</h1>
+        </div>
 
-    <div class="content">
+        <div class="content">
 
-        <!-- SECCIÓN USER PROFILE -->
-        <div th:if="${usuario}">
-            <div class="user-header">
-                <div class="user-avatar">👤</div>
-                <div class="user-info">
-                    <h2 th:text="${usuario.username}">Usuario</h2>
-                    <p th:text="${usuario.email}">email@example.com</p>
-                    <p th:text="'Rol: ' + ${usuario.role}">Rol: Usuario</p>
-                    <div class="button-group">
-                        <a href="/" class="btn">🏠 Ir al Inicio</a>
-                        <!-- Formulario POST para logout (forma correcta y segura) -->
-                        <form th:action="@{/logout}" method="post" class="logout-form">
-                            <button type="submit" class="btn btn-logout">🚪 Cerrar Sesión</button>
-                        </form>
+            <!-- SECCIÓN USER PROFILE -->
+            <div th:if="${usuario}">
+                <div class="user-header">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <h2 th:text="${usuario.username}">Usuario</h2>
+                        <p th:text="${usuario.email}">email@example.com</p>
+                        <div class="button-group">
+                            <a href="/" class="btn">Ir al Inicio</a>
+                            <!-- POST para logout -->
+                            <form th:action="@{/logout}" method="post" class="logout-form">
+                                <button type="submit" class="btn btn-logout"><b>Cerrar Sesión</b></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Reservas Totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Reservas Activas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">€0.00</div>
+                        <div class="stat-label">Gastado</div>
+                    </div>
+                </div>
+
+                <div class="user-reservations">
+                    <h3>Mis Reservas Recientes</h3>
+                    <div class="no-data">
+                        <p>No tienes reservas aún. ¡Comienza a reservar un parking!</p>
                     </div>
                 </div>
             </div>
 
-            <div class="user-stats">
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Reservas Totales</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Reservas Activas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">€0.00</div>
-                    <div class="stat-label">Gastado</div>
-                </div>
+            <!-- Si no hay usuario (no debería ocurrir si la autenticación funciona) -->
+            <div th:if="!${usuario}" class="no-data">
+                <p>Error: No se pudo cargar la información del usuario.</p>
+                <a href="/" class="btn">Volver al Inicio</a>
             </div>
-
-            <div class="user-reservations">
-                <h3>Mis Reservas Recientes</h3>
-                <div class="no-data">
-                    <p>No tienes reservas aún. ¡Comienza a reservar un parking!</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Si no hay usuario (no debería ocurrir si la autenticación funciona) -->
-        <div th:if="!${usuario}" class="no-data">
-            <p>Error: No se pudo cargar la información del usuario.</p>
-            <a href="/" class="btn">Volver al Inicio</a>
         </div>
     </div>
-</div>
+
 </body>
 </html>

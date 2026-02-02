@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${parking.name} + ' - Detalles'"></title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <!-- Enlace para volver -->
+            <a th:href="@{/}" class="btn btn-secondary" style="margin-bottom: 20px;">← Volver</a>
+
+            <!-- DETALLES DEL PARKING -->
+            <div class="parking-details" style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+
+                <!-- Nombre -->
+                <h1 th:text="${parking.name}" style="font-size: 2.5em; margin-bottom: 20px; color: #2563eb;"></h1>
+
+                <!-- Información general -->
+                <div style="background: #f9fafb; padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+
+                        <!-- Ubicación -->
+                        <div>
+                            <h3 style="color: #1f2937; margin-bottom: 10px;">📍 Ubicación</h3>
+                            <p style="font-size: 1.1em; color: #6b7280;" th:text="${parking.address}"></p>
+                        </div>
+
+                        <!-- Horario -->
+                        <div>
+                            <h3 style="color: #1f2937; margin-bottom: 10px;">🕐 Horario de Funcionamiento</h3>
+                            <p style="font-size: 1.1em; color: #6b7280;" th:text="${parking.schedule}"></p>
+                        </div>
+
+                        <!-- Precio por hora -->
+                        <div>
+                            <h3 style="color: #1f2937; margin-bottom: 10px;">💰 Precio por Hora</h3>
+                            <p style="font-size: 1.3em; color: #10b981; font-weight: bold;" th:text="'$' + ${parking.pricePerHour}"></p>
+                        </div>
+
+                        <!-- Plazas disponibles -->
+                        <div>
+                            <h3 style="color: #1f2937; margin-bottom: 10px;">🅿️ Plazas Disponibles</h3>
+                            <p style="font-size: 1.3em; color: #3b82f6; font-weight: bold;" th:text="${#lists.size(parking.spots)}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listado de plazas -->
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #1f2937; margin-bottom: 20px;">Plazas en este Parking</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                        <div th:each="spot : ${parking.spots}"
+                             style="background: #f0f9ff; border: 2px solid #3b82f6; padding: 20px; border-radius: 8px; text-align: center;">
+                            <p style="font-size: 1.3em; font-weight: bold; color: #1f2937; margin-bottom: 5px;" th:text="${spot.number}"></p>
+                            <p style="font-size: 0.9em; color: #6b7280;" th:text="'Tipo: ' + ${spot.type}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div style="display: flex; gap: 15px; margin-top: 40px;">
+                    <a th:href="@{/reservation(parkingId=${parking.parkingId})}"
+                       class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1em;">
+                        Reservar una Plaza
+                    </a>
+                    <a th:href="@{/}" class="btn btn-outline" style="padding: 15px 40px; font-size: 1.1em;">
+                        Volver a Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
