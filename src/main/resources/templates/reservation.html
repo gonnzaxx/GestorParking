@@ -3,13 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation</title>
+    <title>Nueva Reserva - ApárcaMe!</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <!-- HEADER -->
+    <div th:replace="fragments/header :: header"></div>
 
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container" style="max-width: 700px;">
+            <!-- Botón volver -->
+            <a th:href="@{/}" class="btn btn-secondary" style="margin-bottom: 30px; display: inline-block;">
+                ← Volver
+            </a>
 
+            <!-- FORMULARIO DE RESERVA -->
+            <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: var(--shadow-lg);">
+                <h1 style="color: var(--primary); margin-bottom: 10px; font-size: 2rem;">Nueva Reserva</h1>
+                <p style="color: var(--gray); margin-bottom: 30px;">Completa los datos para reservar tu plaza</p>
 
+                <form th:action="@{/reservation}" method="post">
+                    <div class="form-group">
+                        <label for="spotId">Selecciona una Plaza</label>
+                        <select id="spotId" name="spotId" required>
+                            <option value="">-- Selecciona una plaza --</option>
+                        </select>
+                    </div>
 
+                    <div class="form-group">
+                        <label for="entryDate">Fecha de Entrada</label>
+                        <input type="date" id="entryDate" name="entryDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entryTime">Hora de Entrada</label>
+                        <input type="time" id="entryTime" name="entryTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exitDate">Fecha de Salida</label>
+                        <input type="date" id="exitDate" name="exitDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exitTime">Hora de Salida</label>
+                        <input type="time" id="exitTime" name="exitTime" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                        Confirmar Reserva
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

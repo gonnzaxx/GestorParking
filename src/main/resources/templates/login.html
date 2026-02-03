@@ -4,157 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .login-container {
-            background: #ffffffcc; /* blanco translúcido */
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .login-container:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
-        }
-        h1 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #475569;
-            font-weight: 500;
-        }
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: #f8fafc;
-        }
-        input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 8px rgba(59,130,246,0.3);
-        }
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-        button:hover {
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-        }
-        .message {
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .error {
-            background-color: #fee2e2;
-            color: #b91c1c;
-            border: 1px solid #fca5a5;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .links {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #475569;
-        }
-        .links a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .links a:hover {
-            text-decoration: underline;
-            color: #2563eb;
-        }
-    </style>
+    <title>Iniciar Sesión - ApárcaMe!</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <div class="auth-container">
+        <div class="auth-form">
+            <h1>Iniciar Sesión</h1>
+            <p class="subtitle">Accede a tu cuenta de ApárcaMe!</p>
 
-    <!-- Mostrar solo si NO está autenticado -->
-    <div class="login-container">
-        <h1>🔐 Iniciar Sesión</h1>
-
-        <!-- Mensaje de error -->
-        <div th:if="${error}" class="message error">
-            <p th:text="${error}"></p>
-        </div>
-
-        <!-- Mensaje de éxito -->
-        <div th:if="${message}" class="message success">
-            <p th:text="${message}"></p>
-        </div>
-
-        <!-- Formulario de login -->
-        <form th:action="@{/login}" method="post">
-            <div class="form-group">
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" required autofocus>
+            <!-- Mensaje de error -->
+            <div th:if="${error}" class="message error">
+                <span>⚠️</span>
+                <p th:text="${error}"></p>
             </div>
-            <div class="form-group">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Entrar</button>
-        </form>
 
-        <div class="links">
-            <p>¿No tienes cuenta? <a th:href="@{/registro}">Regístrate aquí</a></p>
-            <p><a th:href="@{/}">← Volver</a></p>
+            <!-- Mensaje de éxito -->
+            <div th:if="${message}" class="message success">
+                <span>✓</span>
+                <p th:text="${message}"></p>
+            </div>
+
+            <!-- Formulario de login -->
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Nombre de Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="Introduce tu usuario" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Introduce tu contraseña" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Entrar
+                </button>
+            </form>
+
+            <!-- Enlaces -->
+            <div class="auth-links">
+                <p>¿No tienes cuenta? <a th:href="@{/registro}">Regístrate aquí</a></p>
+                <p><a th:href="@{/}">← Volver al Inicio</a></p>
+            </div>
         </div>
     </div>
-
 </body>
 </html>

@@ -3,69 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apárcame!</title>
+    <title>ApárcaMe! - Reserva tu plaza de aparcamiento</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+
+    <div class="cursor-outline"></div>
+
     <!-- HEADER -->
     <div th:replace="fragments/header :: header"></div>
 
-    <!-- SECCIÓN HOME -->
-    <section id="home" class="hero">
+    <!-- SECCIÓN HERO -->
+    <section class="hero">
         <div class="container">
             <h1>¿No encuentras dónde aparcar?</h1>
-            <p>Reserva tu plaza de aparcamiento de forma rápida, fácil y segura</p>
+            <p>Reserva tu plaza de aparcamiento de forma rápida, fácil y segura en segundos</p>
             <div class="hero-actions">
                 <button class="btn btn-primary btn-lg" onclick="document.getElementById('parking').scrollIntoView({behavior: 'smooth'});">
-                    Reservar Ahora
+                    Buscar Parkings
                 </button>
-
-                <button class="btn btn-primary btn-lg" onclick="window.location.href='/userProfile';">
-                    Iniciar Sesión
+                <button class="btn btn-outline btn-lg" onclick="window.location.href='/userProfile';">
+                    Mi Perfil
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- CARACTERÍSTICAS -->
+    <!-- SECCIÓN CARACTERÍSTICAS -->
     <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2><b>Por qué elegir Apárcame!</b></h2>
+                <h2>Por qué elegir ApárcaMe!</h2>
                 <p class="section-description">Soluciones inteligentes para tu estacionamiento</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <h3>Reserva Rápida</h3>
-                    <p>Reserva tu plaza en menos de 30 segundos desde cualquier dispositivo</p>
+                    <p>Reserva tu plaza en menos de 30 segundos desde cualquier dispositivo, en cualquier momento</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📍</div>
                     <h3>GPS Integrado</h3>
-                    <p>Ubica los parkings cercanos a tu ubicación actual</p>
+                    <p>Ubica los parkings cercanos a tu ubicación actual y elige el que más te convenga</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💳</div>
                     <h3>Múltiples Pagos</h3>
                     <p>Acepta todas las formas de pago: tarjeta, efectivo y billetera digital</p>
                 </div>
-
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>100% Seguro</h3>
+                    <p>Tu privacidad y datos están protegidos con la máxima seguridad encriptada</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Acceso Móvil</h3>
+                    <p>Accede desde tu teléfono móvil, tablet o computadora en cualquier lugar</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Ofertas Exclusivas</h3>
+                    <p>Disfruta de descuentos especiales y promociones para nuestros usuarios frecuentes</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN PARKINGS -->
+    <!-- SECCIÓN PARKINGS DISPONIBLES -->
     <section id="parking" class="section">
         <div class="container">
-            <h2><b>Parkings Disponibles</b></h2>
+            <div class="section-header">
+                <h2><strong>Parkings Disponibles</strong></h2>
+                <p class="section-description">Encuentra la plaza perfecta para estacionarte</p>
+            </div>
 
             <div class="parking-filters">
                 <input type="text" placeholder="Buscar parking por nombre...">
                 <select>
                     <option value="">Ordenar por...</option>
                     <option value="precio">Precio menor a mayor</option>
-                    <option value="distancia">Distancia</option>
+                    <option value="distancia">Distancia más cercana</option>
                     <option value="disponible">Más disponibles</option>
                 </select>
                 <button class="btn btn-primary">Filtrar</button>
@@ -74,58 +93,58 @@
             <div class="parking-info">
                 <div th:each="parking : ${parkings}" class="card">
                     <div class="card-header">
-                        <h3 th:text="${parking.name}"></h3>
+                        <h3 th:text="${parking.name}">Nombre del Parking</h3>
                     </div>
                     <div class="card-body">
-                        <p><strong>Ubicación: </strong>
-                            <span th:text="${parking.address}"></span>
+                        <p>
+                            <strong>Ubicación:</strong>
+                            <span th:text="${parking.address}">Dirección</span>
                         </p>
-                        <p><strong>Plazas disponibles: </strong>
+                        <p>
+                            <strong>Plazas disponibles:</strong>
                             <span th:text="${#lists.size(parking.spots)}" class="badge badge-success"></span>
                         </p>
-
-                        <p><strong>Precio/hora: </strong>
-                            <span th:text="'$' + ${parking.pricePerHour}"></span>
+                        <p>
+                            <strong>Precio/hora:</strong>
+                            <span th:text="'€' + ${parking.pricePerHour}" style="color: var(--secondary); font-weight: bold;"></span>
                         </p>
-
-                        <p><strong>Horario: </strong>
-                            <span th:text="${parking.schedule}"></span>
+                        <p>
+                            <strong>Horario:</strong>
+                            <span th:text="${parking.schedule}">Horario</span>
                         </p>
                     </div>
                     <div class="card-footer">
-                        <a th:href="@{/detailsParking/{id}(id=${parking.parkingId})}" class="btn btn-secondary">
-                            Ver detalles
+                        <a th:href="@{/detailsParking/{id}(id=${parking.parkingId})}" class="btn btn-secondary btn-sm">
+                            Ver Detalles
                         </a>
-                        <a th:href="@{/reservation(parkingId=${parking.parkingId})}" class="btn btn-primary">
-                            Reservar
+                        <a th:href="@{/reservation(parkingId=${parking.parkingId})}" class="btn btn-primary btn-sm">
+                            Reservar Ahora
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 
-    <!-- SECCIÓN ABOUT -->
+    <!-- SECCIÓN ACERCA DE -->
     <section id="about" class="section">
         <div class="container">
             <div class="section-header">
-                <h2><b>Sobre Apárcame!</b></h2>
+                <h2>Sobre ApárcaMe!</h2>
+                <p class="section-description">Tu aliado en la búsqueda de aparcamiento</p>
             </div>
 
             <div class="about-content">
                 <div>
-                    <h3><b>Nuestra Misión</b></h3>
-                    <p>En <b>Apárcame!</b>, creemos que encontrar un lugar para estacionar no debería ser una tarea complicada. Por eso desarrollamos una plataforma inteligente que conecta a conductores con parkings disponibles, optimizando el tiempo y reduciendo la contaminación ambiental.</p>
-                    <p>Desde 2023, hemos ayudado a miles de usuarios a encontrar plazas de estacionamiento de forma segura y eficiente.</p>
+                    <h3>Nuestra Misión</h3>
+                    <p>En <strong>ApárcaMe!</strong>, creemos que encontrar un lugar para estacionar no debería ser una tarea complicada. Por eso desarrollamos una plataforma inteligente que conecta a conductores con parkings disponibles, optimizando el tiempo y reduciendo la contaminación ambiental.</p>
+                    <p>Desde 2023, hemos ayudado a miles de usuarios a encontrar plazas de estacionamiento de forma segura y eficiente. Nuestra misión es transformar la experiencia de estacionamiento en las ciudades modernas.</p>
                 </div>
                 <div class="about-image">
-                    <img src="/images/image_aboutUs.jpg" alt="Sobre nosotros">
+                    <img src="/images/image_aboutUs.jpg" alt="Sobre nosotros - ApárcaMe!">
                 </div>
             </div>
-
         </div>
     </section>
-
 
     <!-- FOOTER -->
     <div th:replace="fragments/footer :: footer"></div>
@@ -138,6 +157,20 @@
                 this.closest('.alert').style.display = 'none';
             });
         });
+
+        // Búsqueda en tiempo real de parkings
+        const searchInput = document.querySelector('.parking-filters input');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                const cards = document.querySelectorAll('.parking-info .card');
+                cards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    card.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            });
+        }
     </script>
+    <script th:src="@{/js/cursor.js}"></script>
 </body>
 </html>

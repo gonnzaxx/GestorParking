@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,7 +70,7 @@ public class RegisterController {
     }
 
     // Mostrar perfil del usuario autenticado
-    @GetMapping("/profile")
+    @GetMapping("/userProfile")
     public String mostrarPerfil(Model model) {
         // Obtener el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,5 +83,36 @@ public class RegisterController {
             model.addAttribute("usuario", usuario.get());
         }
         return "userProfile";
+    }
+
+    @PostMapping("/admin/delete-user")
+    public String eliminarUsuario(@RequestParam Long id) {
+        userService.deleteById(id);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/add-user")
+    public String addUsuario(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("email") String email,
+                             Model model) {
+
+        try {
+            // Validaciones básicas
+            if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+                return "redirect:/admin/adminUsuarios";
+            }
+            if (password.length() < 6) {
+                return "redirect:/admin/adminUsuarios";
+            }
+            // Registrar el usuario
+            userService.registrarUsuario(username, password, email);
+
+            // Redirigir al panel con mensaje de éxito
+            return "redirect:/admin";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "/adminCRUD/adminUsuarios";
+        }
     }
 }

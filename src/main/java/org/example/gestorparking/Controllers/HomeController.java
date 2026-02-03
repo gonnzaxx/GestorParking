@@ -38,10 +38,4 @@ public class HomeController {
         //model.addAttribute("reservations", reservationService.findAll());
         return "detailsParking";
     }
-
-    //Página de admin
-    @RequestMapping("/admin")
-    String admin(){
-        return "admin";
-    }
 }

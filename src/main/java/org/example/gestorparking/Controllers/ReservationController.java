@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/")
 public class ReservationController {
@@ -22,7 +24,7 @@ public class ReservationController {
 
         // Si viene un ID de parking, buscar ese parking
         if (parkingId != null) {
-            Parking parking = parkingService.findById(parkingId);
+            Optional<Parking> parking = parkingService.findById(parkingId);
             if (parking != null) {
                 model.addAttribute("parking", parking);
                 model.addAttribute("parkingId", parkingId);

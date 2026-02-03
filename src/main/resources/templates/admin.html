@@ -1,10 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Admin - ApárcaMe!</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <!-- HEADER -->
+    <div th:replace="fragments/header :: header"></div>
 
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <!-- Encabezado del panel -->
+            <div style="background: linear-gradient(135deg, var(--primary), #667eea); color: white; padding: 50px 40px; border-radius: 12px; margin-bottom: 40px;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Panel de Administración</h1>
+                <p>Gestiona todos los aspectos de la plataforma ApárcaMe!</p>
+            </div>
+
+            <!-- Botones de navegación principal -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-bottom: 50px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Usuarios</h3>
+                    </div>
+                    <div class="card-body" style="text-align: center;">
+                        <p th:text="${usuariosCount}" style="font-size: 2rem; font-weight: bold; color: var(--primary); margin: 20px 0;"></p>
+                        <p>Usuarios registrados</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/admin/usuarios" class="btn btn-primary" style="flex: 1;">Gestionar</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Parkings</h3>
+                    </div>
+                    <div class="card-body" style="text-align: center;">
+                        <p th:text="${parkingsCount}" style="font-size: 2rem; font-weight: bold; color: var(--secondary); margin: 20px 0;"></p>
+                        <p>Parkings disponibles</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/admin/parkings" class="btn btn-primary" style="flex: 1;">Gestionar</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Reservas</h3>
+                    </div>
+                    <div class="card-body" style="text-align: center;">
+                        <p th:text="${reservationsCount}" style="font-size: 2rem; font-weight: bold; color: var(--warning); margin: 20px 0;"></p>
+                        <p>Reservas totales</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/admin/reservas" class="btn btn-primary" style="flex: 1;">Ver todas</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Plazas</h3>
+                    </div>
+                    <div class="card-body" style="text-align: center;">
+                        <p th:text="${parkingSpotsCount}" style="font-size: 2rem; font-weight: bold; color: var(--secondary); margin: 20px 0;">€0</p>
+                        <p>Plazas totales disponibles</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/admin/reportes" class="btn btn-primary" style="flex: 1;">Gestionar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: var(--shadow-lg);">
+                <h2 style="color: var(--dark); margin-bottom: 30px; font-size: 1.5rem;">Acciones Rápidas</h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <a href="/adminCRUD/adminParkings" class="btn btn-primary">
+                        Nuevo Parking
+                    </a>
+                    <a href="/adminCRUD/adminUsuarios" class="btn btn-primary">
+                        Ver Usuarios
+                    </a>
+                    <a href="/admin/reportes" class="btn btn-primary">
+                        Reportes
+                    </a>
+                    <a href="/admin/configuracion" class="btn btn-secondary">
+                        Configuración
+                    </a>
+                </div>
+            </div>
+
+            <!-- Información de seguridad -->
+            <div style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 20px; border-radius: 8px; margin-top: 40px;">
+                <h3 style="color: var(--primary); margin-bottom: 10px;">🔒 Información de Seguridad</h3>
+                <p style="color: var(--gray-dark);">Recuerda cambiar tu contraseña regularmente y mantener tu sesión segura. Acceso limitado a administradores autorizados.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

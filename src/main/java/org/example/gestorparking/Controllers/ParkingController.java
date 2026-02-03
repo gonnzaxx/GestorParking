@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/")
 public class ParkingController {
@@ -21,14 +23,16 @@ public class ParkingController {
     @GetMapping("/detailsParking/{id}")
     public String mostrarDetallesParking(@PathVariable Long id, Model model) {
         // Buscar el parking por ID
-        Parking parking = parkingService.findById(id);
+        Optional<Parking> parking = parkingService.findById(id);
 
-        if (parking == null) {
+        if (parking.isEmpty()) {
             return "redirect:/";  // Si no existe, vuelve a home
+        }else {
+            model.addAttribute("parking", parking.get());
+            return "detailsParking";
         }
 
-        model.addAttribute("parking", parking);
-        return "detailsParking";
+
     }
 
 }

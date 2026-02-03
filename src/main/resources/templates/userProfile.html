@@ -4,232 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        .content {
-            padding: 40px;
-        }
-        .user-header {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px solid #e2e8f0;
-            align-items: center;
-        }
-        .user-avatar {
-            font-size: 80px;
-            width: 120px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            border-radius: 50%;
-        }
-        .user-info h2 {
-            font-size: 1.8rem;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-        .user-info p {
-            color: #64748b;
-            margin: 5px 0;
-            font-size: 0.95rem;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            text-decoration: none;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(59,130,246,0.3);
-        }
-        .btn-logout {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-        .btn-logout:hover {
-            box-shadow: 0 6px 15px rgba(239,68,68,0.3);
-        }
-        .user-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .stat-card {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #e2e8f0;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 5px;
-        }
-        .stat-label {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-        .user-reservations {
-            margin-top: 30px;
-        }
-        .user-reservations h3 {
-            color: #1e293b;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        table thead {
-            background: #f1f5f9;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        table th {
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #475569;
-        }
-        table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #64748b;
-        }
-        table tr:hover {
-            background: #f8fafc;
-        }
-        .badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        .badge-success {
-            background: #dcfce7;
-            color: #166534;
-        }
-        .badge-primary {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        /* Estilo para el formulario de logout */
-        .logout-form {
-            display: contents;
-        }
-    </style>
+    <title>Mi Perfil - ApárcaMe!</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <!-- HEADER -->
+    <div th:replace="fragments/header :: header"></div>
 
-    <div class="container">
-        <div class="header">
-            <h1>👤 Mi Perfil</h1>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="profile-container">
+        <!-- Sección Usuario -->
+        <div th:if="${usuario}">
+            <!-- Header del Perfil -->
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-info">
+                    <h2 th:text="${usuario.username}">Usuario</h2>
+                    <p th:text="${usuario.email}">email@example.com</p>
+                    <div class="profile-actions">
+                        <a href="/" class="btn btn-secondary">Ir al Inicio</a>
+                        <!-- POST para logout -->
+                        <form th:action="@{/logout}" method="post" style="display: contents;">
+                            <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Reservas Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Reservas Activas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">€0.00</div>
+                    <div class="stat-label">Total Gastado</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0h</div>
+                    <div class="stat-label">Horas Estacionadas</div>
+                </div>
+            </div>
+
+            <!-- Mis Reservas -->
+            <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: var(--shadow-lg);">
+                <h3 style="color: var(--dark); margin-bottom: 30px; font-size: 1.5rem;">Mis Reservas Recientes</h3>
+
+                <div class="no-data">
+                    <p style="font-size: 1.2rem; margin-bottom: 15px;">No tienes reservas aún</p>
+                    <p>Comienza a explorar nuestros parkings disponibles y haz tu primera reserva</p>
+                    <a href="/" class="btn btn-primary" style="margin-top: 20px;">
+                        Explorar Parkings
+                    </a>
+                </div>
+
+                <!-- Tabla de reservas (visible cuando haya datos) -->
+                <div class="table-responsive" style="display: none;">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Parking</th>
+                            <th>Plaza</th>
+                            <th>Fecha Entrada</th>
+                            <th>Fecha Salida</th>
+                            <th>Estado</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Las reservas irán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="content">
-
-            <!-- SECCIÓN USER PROFILE -->
-            <div th:if="${usuario}">
-                <div class="user-header">
-                    <div class="user-avatar">👤</div>
-                    <div class="user-info">
-                        <h2 th:text="${usuario.username}">Usuario</h2>
-                        <p th:text="${usuario.email}">email@example.com</p>
-                        <div class="button-group">
-                            <a href="/" class="btn">Ir al Inicio</a>
-                            <!-- POST para logout -->
-                            <form th:action="@{/logout}" method="post" class="logout-form">
-                                <button type="submit" class="btn btn-logout"><b>Cerrar Sesión</b></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="user-stats">
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Reservas Totales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Reservas Activas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">€0.00</div>
-                        <div class="stat-label">Gastado</div>
-                    </div>
-                </div>
-
-                <div class="user-reservations">
-                    <h3>Mis Reservas Recientes</h3>
-                    <div class="no-data">
-                        <p>No tienes reservas aún. ¡Comienza a reservar un parking!</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Si no hay usuario (no debería ocurrir si la autenticación funciona) -->
-            <div th:if="!${usuario}" class="no-data">
-                <p>Error: No se pudo cargar la información del usuario.</p>
-                <a href="/" class="btn">Volver al Inicio</a>
-            </div>
+        <!-- Si no hay usuario -->
+        <div th:if="!${usuario}" class="no-data">
+            <p style="font-size: 1.3rem; margin-bottom: 20px;">⚠️ Error al cargar el perfil</p>
+            <p style="margin-bottom: 25px;">No pudimos cargar tu información de usuario. Por favor, intenta de nuevo.</p>
+            <a href="/" class="btn btn-primary">Volver al Inicio</a>
         </div>
     </div>
 
+    <!-- FOOTER -->
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

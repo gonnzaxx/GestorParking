@@ -2,21 +2,110 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<header th:fragment="header">
+    <header th:fragment="header">
+        <!-- NAVEGACIÓN -->
+        <nav class="navbar">
+            <div class="container flex-between">
+                <a href="/" class="navbar-brand">
+                    <svg class="navbar-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="logoShadow">
+                                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.08"/>
+                            </filter>
+                        </defs>
+                        <!-- SIN CÍRCULO DE FONDO -->
+                        <g transform="translate(100, 100)" filter="url(#logoShadow)">
+                            <g stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+                                <!-- Barra vertical -->
+                                <path d="M -15 -45 L -15 50" />
+                                <!-- Semicírculo superior (la cabeza de la P) -->
+                                <path d="M -15 -45 Q -15 -20 10 -20 Q 35 -20 35 -2 Q 35 15 10 15 L -15 15" />
+                                <!-- Diagonal decorativa (movimiento) -->
+                                <path d="M -15 15 L 25 50" />
+                            </g>
+                            <!-- Acento de color (línea subrayada) -->
+                            <line x1="-15" y1="50" x2="25" y2="50" stroke="#0066cc" stroke-width="3.5" stroke-linecap="round"/>
+                        </g>
+                    </svg>
+                    <span class="navbar-text font-modern">APÁRCAME!</span>
+                </a>
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link" data-page="home">Inicio</a></li>
+                    <li><a href="/#parking" class="nav-link" data-page="parking">Parkings</a></li>
+                    <li><a href="/#about" class="nav-link" data-page="about">Sobre Nosotros</a></li>
+                    <li>
+                        <a th:href="@{/userProfile}" class="nav-link" data-page="profile">
+                            <img th:src="@{/images/perfilHeader.png}" alt="Perfil" width="15" height="15" >
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin}" class="nav-link" data-page="admin">
+                            <img th:src="@{/images/ajuste.png}" alt="Perfil" width="15" height="15">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-    <!-- NAVEGACIÓN -->
-    <nav class="navbar">
-        <div class="container flex-between">
-            <span class="navbar-brand">Apárcame!</span>
-            <ul class="nav-list">
-                <li><a href="#home" class="nav-link active">Inicio</a></li>
-                <li><a href="#about" class="nav-link">Sobre Nosotros</a></li>
-                <li><a th:href="@{/userProfile}" class="nav-link">Mi Perfil</a></li>
-                <li><a th:href="@{/admin}" class="nav-link">Admin</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
+    <script>
+        // Script para resaltar el menú activo según la página
+        function activateNavLink() {
+            // Obtener la URL actual
+            const currentPath = window.location.pathname;
+            const currentHash = window.location.hash;
+
+            // Obtener todos los links del nav
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            // Remover clase 'active' de todos los links
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Determinar qué link activar basándose en la URL
+            if (currentPath === '/' && !currentHash) {
+                // Página de inicio
+                document.querySelector('[data-page="home"]')?.classList.add('active');
+            } else if (currentPath === '/userProfile') {
+                // Página de perfil
+                document.querySelector('[data-page="profile"]')?.classList.add('active');
+            } else if (currentPath === '/admin') {
+                // Página de admin
+                document.querySelector('[data-page="admin"]')?.classList.add('active');
+            } else if (currentPath === '/detailsParking' || currentPath.includes('/detailsParking')) {
+                // Página de detalles parking - resaltar parkings
+                document.querySelector('[data-page="parking"]')?.classList.add('active');
+            } else if (currentPath === '/reservation' || currentPath.includes('/reservation')) {
+                // Página de reserva - resaltar parkings
+                document.querySelector('[data-page="parking"]')?.classList.add('active');
+            } else if (currentHash === '#parking') {
+                // Sección de parkings
+                document.querySelector('[data-page="parking"]')?.classList.add('active');
+            } else if (currentHash === '#about') {
+                // Sección about
+                document.querySelector('[data-page="about"]')?.classList.add('active');
+            } else if (currentHash === '#home' || currentHash === '') {
+                // Sección home
+                document.querySelector('[data-page="home"]')?.classList.add('active');
+            }
+        }
+
+        // Ejecutar cuando el DOM esté completamente listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                activateNavLink();
+            });
+        } else {
+            activateNavLink();
+        }
+
+        // Ejecutar cuando cambia el hash (al hacer scroll a secciones)
+        window.addEventListener('hashchange', activateNavLink);
+
+        // También ejecutar con un pequeño delay por si acaso
+        setTimeout(activateNavLink, 100);
+    </script>
 
 </body>
 </html>

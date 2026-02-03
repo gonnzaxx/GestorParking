@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - ApárcaMe!</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<!-- HEADER -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<section class="section">
+    <div class="container">
+        <!-- Botón volver -->
+        <a href="/admin" class="btn btn-secondary btn-volver">← Volver al Panel</a>
+
+        <!-- SECCIÓN DE USUARIOS -->
+        <div class="admin-section">
+            <div class="form-section">
+                <h2>Gestión de Usuarios</h2>
+
+                <!-- Mensajes de éxito/error -->
+                <div th:if="${successMessage}" class="alert-message alert-success">
+                    ✓ <span th:text="${successMessage}"></span>
+                </div>
+                <div th:if="${errorMessage}" class="alert-message alert-error">
+                    ✗ <span th:text="${errorMessage}"></span>
+                </div>
+
+                <!-- Formulario para agregar usuario -->
+                <div class="form-card">
+                    <h3>Crear Nuevo Usuario</h3>
+                    <form th:action="@{/admin/add-user}" method="post">
+                        <div class="form-group">
+                            <label>Nombre de Usuario</label>
+                            <input type="text" name="username" class="form-control" required placeholder="ej: juan123">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control" required placeholder="ej: juan@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Contraseña</label>
+                            <input type="password" name="password" class="form-control" required placeholder="Mín. 6 caracteres">
+                        </div>
+                        <div class="form-group">
+                            <label>Rol</label>
+                            <select name="role" class="form-control">
+                                <option value="ROLE_USER">Usuario Normal</option>
+                                <option value="ROLE_ADMIN">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TABLA DE USUARIOS -->
+            <div class="table-section">
+                <h2>Lista de Usuarios</h2>
+
+                <div th:if="${usuarios != null and usuarios.size() > 0}">
+                    <table class="users-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="usuario : ${usuarios}">
+                            <td th:text="${usuario.id}"></td>
+                            <td th:text="${usuario.username}"></td>
+                            <td th:text="${usuario.email}"></td>
+                            <td>
+                                <span th:if="${usuario.role == 'ROLE_ADMIN'}" class="badge-role badge-admin">Admin</span>
+                                <span th:if="${usuario.role == 'ROLE_USER'}" class="badge-role badge-user">User</span>
+                            </td>
+                            <td>
+                                <span th:if="${usuario.enabled}" class="badge-active">Activo</span>
+                                <span th:unless="${usuario.enabled}" class="badge-inactive">Inactivo</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <!-- Botón editar (abre modal) -->
+                                    <button type="button" class="btn-sm" th:onclick="openEditModal([[${usuario.id}]], [[${usuario.role}]], [[${usuario.enabled}]])">
+                                        Editar
+                                    </button>
+                                    <!-- Botón eliminar -->
+                                    <form th:action="@{/admin/delete-user}" method="post" style="display: inline;">
+                                        <input type="hidden" name="id" th:value="${usuario.id}">
+                                        <button type="submit" class="btn-sm-delete" onclick="return confirm('¿Estás seguro de que quieres eliminar este usuario?');">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div th:if="${usuarios == null or usuarios.size() == 0}" class="no-data-admin">
+                    <p>No hay usuarios registrados aún</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL PARA EDITAR USUARIO -->
+<div id="editModal" class="modal-form">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeEditModal()">&times;</span>
+        <h2 class="modal-title">✏️ Editar Usuario</h2>
+
+        <form th:action="@{/admin/update-user}" method="post">
+            <input type="hidden" name="id" id="modalUserId">
+
+            <div class="form-group">
+                <label>Rol</label>
+                <select name="role" id="modalRole" class="form-control">
+                    <option value="ROLE_USER">Usuario Normal</option>
+                    <option value="ROLE_ADMIN">Administrador</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+                <select name="enabled" id="modalEnabled" class="form-control">
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    // Funciones para el modal
+    function openEditModal(userId, role, enabled) {
+        document.getElementById('modalUserId').value = userId;
+        document.getElementById('modalRole').value = role;
+        document.getElementById('modalEnabled').value = enabled;
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    // Cerrar modal al hacer click fuera
+    window.onclick = function(event) {
+        const modal = document.getElementById('editModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>
