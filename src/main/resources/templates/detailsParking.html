@@ -7,76 +7,80 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<!-- HEADER -->
-<div th:replace="fragments/header :: header"></div>
+    <div class="cursor-outline"></div>
+    <!-- HEADER -->
+    <div th:replace="fragments/header :: header"></div>
 
-<!-- CONTENIDO PRINCIPAL -->
-<section class="section">
-    <div class="container">
-        <!-- Botón volver -->
-        <a th:href="@{/}" class="btn btn-secondary" style="margin-bottom: 30px; display: inline-block;">
-            ← Volver a Parkings
-        </a>
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <!-- Botón volver -->
+            <a th:href="@{/}" class="btn btn-secondary" style="margin-bottom: 30px; display: inline-block;">
+                ← Volver a Parkings
+            </a>
 
-        <!-- DETALLES DEL PARKING -->
-        <div class="parking-details">
-            <!-- Nombre -->
-            <h1 th:text="${parking.name}">Nombre del Parking</h1>
+            <!-- DETALLES DEL PARKING -->
+            <div class="parking-details">
+                <!-- Nombre -->
+                <h1 th:text="${parking.name}">Nombre del Parking</h1>
 
-            <!-- Información general -->
-            <div class="info-section">
-                <div class="info-grid">
-                    <!-- Ubicación -->
-                    <div class="info-item">
-                        <h3>Ubicación</h3>
-                        <p th:text="${parking.address}">Dirección del parking</p>
-                    </div>
+                <!-- Información general -->
+                <div class="info-section">
+                    <div class="info-grid">
+                        <!-- Ubicación -->
+                        <div class="info-item">
+                            <h3>Ubicación</h3>
+                            <p th:text="${parking.address}">Dirección del parking</p>
+                        </div>
 
-                    <!-- Horario -->
-                    <div class="info-item">
-                        <h3>Horario de Funcionamiento</h3>
-                        <p th:text="${parking.schedule}">Horario</p>
-                    </div>
+                        <!-- Horario -->
+                        <div class="info-item">
+                            <h3>Horario de Funcionamiento</h3>
+                            <p th:text="${parking.schedule}">Horario</p>
+                        </div>
 
-                    <!-- Precio por hora -->
-                    <div class="info-item">
-                        <h3>Precio por Hora</h3>
-                        <p th:text="'€' + ${parking.pricePerHour}" style="color: var(--secondary);"></p>
-                    </div>
+                        <!-- Precio por hora -->
+                        <div class="info-item">
+                            <h3>Precio por Hora</h3>
+                            <p th:text="'€' + ${parking.pricePerHour}" style="color: var(--secondary);"></p>
+                        </div>
 
-                    <!-- Plazas disponibles -->
-                    <div class="info-item">
-                        <h3>Plazas Disponibles</h3>
-                        <p th:text="${#lists.size(parking.spots)}">0</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listado de plazas -->
-            <div style="margin-bottom: 40px;">
-                <h2 style="color: var(--dark); margin-bottom: 25px; font-size: 1.8rem;">Plazas en este Parking:</h2>
-                <div class="spots-grid">
-                    <div th:each="spot : ${parking.spots}" class="spot-card">
-                        <div class="spot-number" th:text="${spot.number}">A1</div>
-                        <div class="spot-type" th:text="'Tipo: ' + ${spot.type}">Tipo: Normal</div>
+                        <!-- Plazas disponibles -->
+                        <div class="info-item">
+                            <h3>Plazas Disponibles</h3>
+                            <p th:text="${#lists.size(parking.spots)}">0</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Botones de acción -->
-            <div style="display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap;">
-                <a th:href="@{/reservation(parkingId=${parking.parkingId})}" class="btn btn-primary btn-lg">
-                    Reservar una Plaza
-                </a>
-                <a th:href="@{/}" class="btn btn-outline btn-lg">
-                    ← Volver a Inicio
-                </a>
+                <!-- Listado de plazas -->
+                <div style="margin-bottom: 40px;">
+                    <h2 style="color: var(--dark); margin-bottom: 25px; font-size: 1.8rem;">Plazas en este Parking:</h2>
+                    <div class="spots-grid">
+                        <div th:each="spot : ${parking.spots}" class="spot-card">
+                            <div class="spot-number" th:text="${spot.number}">A1</div>
+                            <div class="spot-type" th:text="'Tipo: ' + ${spot.type}">Tipo: Normal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div style="display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap;">
+                    <a th:href="@{/reservation(parkingId=${parking.parkingId})}" class="btn btn-primary btn-lg">
+                        Reservar una Plaza
+                    </a>
+                    <a th:href="@{/}" class="btn btn-outline btn-lg">
+                        ← Volver a Inicio
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- FOOTER -->
-<div th:replace="fragments/footer :: footer"></div>
+    <!-- FOOTER -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/cursor.js}"></script>
+
 </body>
 </html>

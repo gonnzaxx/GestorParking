@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <div class="cursor-outline"></div>
     <!-- HEADER -->
     <div th:replace="fragments/header :: header"></div>
 
@@ -95,5 +96,7 @@
 
     <!-- FOOTER -->
     <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/cursor.js}"></script>
 </body>
 </html>
