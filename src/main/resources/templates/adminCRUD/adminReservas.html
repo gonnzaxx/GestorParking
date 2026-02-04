@@ -1,10 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reservas - ApárcaMe!</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <!-- HEADER -->
+    <div th:replace="~{fragments/header :: header}"></div>
 
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="section">
+        <div class="container">
+            <!-- Botón volver -->
+            <a href="/admin" class="btn btn-secondary btn-volver">← Volver al Panel</a>
+
+            <!-- SECCIÓN DE RESERVAS -->
+            <div class="admin-section">
+                <div class="form-section">
+                    <h2>Gestión de Reservas</h2>
+
+                    <!-- Mensajes de éxito/error -->
+                    <div th:if="${successMessage}" class="alert-message alert-success">
+                        ✓ <span th:text="${successMessage}"></span>
+                    </div>
+                    <div th:if="${errorMessage}" class="alert-message alert-error">
+                        ✗ <span th:text="${errorMessage}"></span>
+                    </div>
+
+                    <!-- Formulario para agregar reserva -->
+                    <div class="form-card">
+                        <h3>Crear Nueva Reserva</h3>
+                        <form th:action="@{/admin/add-reserva}" method="post">
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                <select name="userId" class="form-control" required>
+                                    <option value="">-- Selecciona un usuario --</option>
+                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.username}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Plaza de Estacionamiento (Disponibles)</label>
+                                <select name="spotId" class="form-control" required>
+                                    <option value="">-- Selecciona una plaza --</option>
+                                    <option th:each="spot : ${parkingSpots}" th:value="${spot.spotId}" th:text="'Plaza ' + ${spot.number}"></option>
+                                </select>
+                                <small style="color: var(--gray); margin-top: 5px; display: block;">Solo se muestran las plazas disponibles</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha y Hora de Inicio</label>
+                                <input type="datetime-local" name="startDate" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha y Hora de Fin</label>
+                                <input type="datetime-local" name="endDate" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Estado</label>
+                                <select name="status" class="form-control" required>
+                                    <option value="PENDIENTE">Pendiente</option>
+                                    <option value="CONFIRMADA">Confirmada</option>
+                                    <option value="COMPLETADA">Completada</option>
+                                    <option value="CANCELADA">Cancelada</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear Reserva</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- TABLA DE RESERVAS -->
+                <div class="table-section">
+                    <h2>Lista de Reservas</h2>
+
+                    <div th:if="${reservas != null and reservas.size() > 0}">
+                        <table class="users-table">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Plaza</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="reserva : ${reservas}">
+                                <td th:text="${reserva.reservationId}"></td>
+                                <td th:text="${reserva.user.username}"></td>
+                                <td th:text="'Plaza ' + ${reserva.parkingSpot.number}"></td>
+                                <td th:text="${#temporals.format(reserva.startDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td th:text="${#temporals.format(reserva.endDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td>
+                                    <span th:if="${reserva.status == 'PENDIENTE'}" class="badge-status badge-warning">Pendiente</span>
+                                    <span th:if="${reserva.status == 'CONFIRMADA'}" class="badge-status badge-success-status">Confirmada</span>
+                                    <span th:if="${reserva.status == 'COMPLETADA'}" class="badge-status badge-success-status">Completada</span>
+                                    <span th:if="${reserva.status == 'CANCELADA'}" class="badge-status badge-danger-status">Cancelada</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <!-- Botón editar (abre modal) -->
+                                        <button type="button" class="btn-sm" th:onclick="openEditModal([[${reserva.reservationId}]], [[${reserva.user.id}]], [[${reserva.parkingSpot.spotId}]], [[${#temporals.format(reserva.startDate, 'yyyy-MM-dd HH:mm')}]], [[${#temporals.format(reserva.endDate, 'yyyy-MM-dd HH:mm')}]], [[${reserva.status}]])">
+                                            Editar
+                                        </button>
+                                        <!-- Botón eliminar -->
+                                        <form th:action="@{/admin/delete-reserva}" method="post" style="display: inline;">
+                                            <input type="hidden" name="id" th:value="${reserva.reservationId}">
+                                            <button type="submit" class="btn-sm-delete" onclick="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div th:if="${reservas == null or reservas.size() == 0}" class="no-data-admin">
+                        <p>No hay reservas registradas aún</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL PARA EDITAR RESERVA -->
+    <div id="editModal" class="modal-form">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">&times;</span>
+            <h2 class="modal-title">✏️ Editar Reserva</h2>
+
+            <form th:action="@{/admin/update-reserva}" method="post">
+                <input type="hidden" name="id" id="modalReservaId">
+
+                <div class="form-group">
+                    <label>Fecha y Hora de Inicio</label>
+                    <input type="datetime-local" name="startDate" id="modalStartDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha y Hora de Fin</label>
+                    <input type="datetime-local" name="endDate" id="modalEndDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select name="status" id="modalStatus" class="form-control" required>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="CONFIRMADA">Confirmada</option>
+                        <option value="COMPLETADA">Completada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        // Funciones para el modal
+        function openEditModal(reservaId, userId, spotId, startDate, endDate, status) {
+            document.getElementById('modalReservaId').value = reservaId;
+            document.getElementById('modalStartDate').value = startDate.replace(' ', 'T');
+            document.getElementById('modalEndDate').value = endDate.replace(' ', 'T');
+            document.getElementById('modalStatus').value = status;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Cerrar modal al hacer click fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

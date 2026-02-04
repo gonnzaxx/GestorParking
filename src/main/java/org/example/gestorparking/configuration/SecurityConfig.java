@@ -32,10 +32,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas (accesibles sin login)
-                        .requestMatchers("/", "/registro",
-                                "/login", "/fragments/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**",
-                                "/images/**").permitAll()
+                        .requestMatchers("/", "/registro", "/login").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**" , "/fragments/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() //Solo para desarrollo
                         // Rutas protegidas (requieren autenticación)
                         .requestMatchers("/admin/**", "/profile", "/userProfile").hasAnyRole("USER", "ADMIN")

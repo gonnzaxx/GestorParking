@@ -22,6 +22,9 @@ public class ParkingSpot {
     @JoinColumn(name = "parking_id", nullable = false)
     private Parking parking;
 
+    @Column(nullable = false)
+    private boolean occupied = false;
+
     @OneToMany(mappedBy = "parkingSpot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -71,5 +74,13 @@ public class ParkingSpot {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 }

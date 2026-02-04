@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ApárcaMe! - Reserva tu plaza de aparcamiento</title>
+    <title>ApárcaMe! </title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div class="cursor-outline"></div>
 
     <!-- HEADER -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- SECCIÓN HERO -->
     <section class="hero">
@@ -147,7 +147,11 @@
     </section>
 
     <!-- FOOTER -->
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <div id="progress-scroll">
+        <span id="progress-value">&#x2191;</span>
+    </div>
 
     <!-- SCRIPTS -->
     <script>
@@ -172,5 +176,6 @@
         }
     </script>
     <script th:src="@{/js/cursor.js}"></script>
+    <script th:src="@{/js/buttonScroll.js}"></script>
 </body>
 </html>

@@ -10,6 +10,10 @@
 <body>
 
     <div class="cursor-outline"></div>
+
+    <!-- HEADER -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
     <div class="auth-container">
         <div class="auth-form">
             <h1>Iniciar Sesión</h1>
@@ -51,6 +55,9 @@
             </div>
         </div>
     </div>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script th:src="@{/js/cursor.js}"></script>
 </body>

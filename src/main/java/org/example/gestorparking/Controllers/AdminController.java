@@ -13,11 +13,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
 
@@ -270,10 +274,137 @@ public class AdminController {
         try {
             List<Reservation> reservas = reservationService.findAll();
             model.addAttribute("reservas", reservas);
+
+            List<User> usuarios = userService.findAll();
+            model.addAttribute("usuarios", usuarios);
+
+            List<ParkingSpot> parkingSpots = parkingSpotService.findAvailableSpots();
+            model.addAttribute("parkingSpots", parkingSpots);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error al cargar reservas");
         }
         return "adminCRUD/adminReservas";
+    }
+
+    // Crear reserva
+    @PostMapping("/admin/add-reserva")
+    public String addReserva(
+            @RequestParam("userId") Long userId,
+            @RequestParam("spotId") Long spotId,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("status") String status,
+            Model model) {
+        try {
+            if (startDate.isEmpty() || endDate.isEmpty() || status.isEmpty()) {
+                model.addAttribute("errorMessage", "Todos los campos son obligatorios");
+                return "redirect:/admin/reservas";
+            }
+
+            // Validar que el usuario existe
+            Optional<User> user = userService.findById(userId);
+            if (!user.isPresent()) {
+                model.addAttribute("errorMessage", "Usuario no encontrado");
+                return "redirect:/admin/reservas";
+            }
+
+            // Validar que la plaza existe
+            Optional<ParkingSpot> spot = parkingSpotService.findById(spotId);
+            if (!spot.isPresent()) {
+                model.addAttribute("errorMessage", "Plaza de estacionamiento no encontrada");
+                return "redirect:/admin/reservas";
+            }
+
+            // Validar que la plaza no está ocupada
+            if (spot.get().isOccupied()) {
+                model.addAttribute("errorMessage", "Esta plaza ya está ocupada");
+                return "redirect:/admin/reservas";
+            }
+
+            // Parsear fechas
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            LocalDateTime start = LocalDateTime.parse(startDate, formatter);
+            LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+
+            if (end.isBefore(start)) {
+                model.addAttribute("errorMessage", "La fecha de fin debe ser después de la fecha de inicio");
+                return "redirect:/admin/reservas";
+            }
+
+            // Crear reserva
+            Reservation reservation = new Reservation();
+            reservation.setUser(user.get());
+            reservation.setParkingSpot(spot.get());
+            reservation.setStartDate(start);
+            reservation.setEndDate(end);
+            reservation.setStatus(status);
+
+
+            spot.get().setOccupied(true);
+            parkingSpotService.create(spot.get());
+
+            reservationService.create(reservation);
+
+
+            model.addAttribute("successMessage", "Reserva creada correctamente");
+            return "redirect:/admin/reservas";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error al crear reserva: " + e.getMessage());
+            return "redirect:/admin/reservas";
+        }
+    }
+
+
+    @PostMapping("/admin/update-reserva")
+    public String updateReserva(
+            @RequestParam("id") Long id,
+            @RequestParam("status") String status,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate,
+            Model model) {
+        try {
+            Reservation reservation = reservationService.findById(id);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            LocalDateTime start = LocalDateTime.parse(startDate, formatter);
+            LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+
+            if (end.isBefore(start)) {
+                model.addAttribute("errorMessage", "La fecha de fin debe ser después de la fecha de inicio");
+                return "redirect:/admin/reservas";
+            }
+
+            reservation.setStatus(status);
+            reservation.setStartDate(start);
+            reservation.setEndDate(end);
+            reservationService.create(reservation);
+
+            model.addAttribute("successMessage", "Reserva actualizada correctamente");
+            return "redirect:/admin/reservas";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error al actualizar reserva: " + e.getMessage());
+            return "redirect:/admin/reservas";
+        }
+    }
+
+    @PostMapping("/admin/delete-reserva")
+    public String deleteReserva(
+            @RequestParam("id") Long id,
+            Model model) {
+        try {
+            Reservation reservation = reservationService.findById(id);
+
+            ParkingSpot spot = reservation.getParkingSpot();
+            spot.setOccupied(false);
+            parkingSpotService.save(spot);
+
+            reservationService.delete(id);
+
+            model.addAttribute("successMessage", "Reserva eliminada correctamente");
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error al eliminar reserva");
+        }
+        return "redirect:/admin/reservas";
     }
 
 

@@ -114,62 +114,62 @@
     </div>
 </section>
 
-<!-- MODAL PARA EDITAR USUARIO -->
-<div id="editModal" class="modal-form">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeEditModal()">&times;</span>
-        <h2 class="modal-title">✏️ Editar Usuario</h2>
+    <!-- MODAL PARA EDITAR USUARIO -->
+    <div id="editModal" class="modal-form">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">&times;</span>
+            <h2 class="modal-title">✏️ Editar Usuario</h2>
 
-        <form th:action="@{/admin/update-user}" method="post">
-            <input type="hidden" name="id" id="modalUserId">
+            <form th:action="@{/admin/update-user}" method="post">
+                <input type="hidden" name="id" id="modalUserId">
 
-            <div class="form-group">
-                <label>Rol</label>
-                <select name="role" id="modalRole" class="form-control">
-                    <option value="ROLE_USER">Usuario Normal</option>
-                    <option value="ROLE_ADMIN">Administrador</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select name="role" id="modalRole" class="form-control">
+                        <option value="ROLE_USER">Usuario Normal</option>
+                        <option value="ROLE_ADMIN">Administrador</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Estado</label>
-                <select name="enabled" id="modalEnabled" class="form-control">
-                    <option value="true">Activo</option>
-                    <option value="false">Inactivo</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select name="enabled" id="modalEnabled" class="form-control">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
 
-            <div class="modal-buttons">
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
-            </div>
-        </form>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- FOOTER -->
-<div th:replace="fragments/footer :: footer"></div>
+    <!-- FOOTER -->
+    <div th:replace="fragments/footer :: footer"></div>
 
-<script>
-    // Funciones para el modal
-    function openEditModal(userId, role, enabled) {
-        document.getElementById('modalUserId').value = userId;
-        document.getElementById('modalRole').value = role;
-        document.getElementById('modalEnabled').value = enabled;
-        document.getElementById('editModal').style.display = 'block';
-    }
-
-    function closeEditModal() {
-        document.getElementById('editModal').style.display = 'none';
-    }
-
-    // Cerrar modal al hacer click fuera
-    window.onclick = function(event) {
-        const modal = document.getElementById('editModal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
+    <script>
+        // Funciones para el modal
+        function openEditModal(userId, role, enabled) {
+            document.getElementById('modalUserId').value = userId;
+            document.getElementById('modalRole').value = role;
+            document.getElementById('modalEnabled').value = enabled;
+            document.getElementById('editModal').style.display = 'block';
         }
-    }
-</script>
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Cerrar modal al hacer click fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

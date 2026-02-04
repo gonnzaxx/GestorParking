@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- HEADER -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- CONTENIDO PRINCIPAL -->
     <section class="section">
@@ -104,6 +104,6 @@
     </section>
 
     <!-- FOOTER -->
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

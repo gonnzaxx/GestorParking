@@ -9,7 +9,7 @@
 <body>
     <div class="cursor-outline"></div>
     <!-- HEADER -->
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- CONTENIDO PRINCIPAL -->
     <section class="section">
@@ -61,7 +61,7 @@
     </section>
 
     <!-- FOOTER -->
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script th:src="@{/js/cursor.js}"></script>
 </body>
